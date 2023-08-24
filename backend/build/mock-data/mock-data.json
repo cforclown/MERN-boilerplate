@@ -1,0 +1,26 @@
+[
+    {
+        "name": "Schedule 1",
+        "start": "01-01-2023",
+        "end": "01-02-2023",
+        "desc": "Schedule 1 description"
+    },
+    {
+        "name": "schedule 2",
+        "start": "01-02-2023",
+        "end": "01-03-2023",
+        "desc": "Schedule 2 description"
+    },
+    {
+        "name": "schedule 3",
+        "start": "01-03-2023",
+        "end": "01-04-2023",
+        "desc": "Schedule 3 description"
+    },
+    {
+        "name": "schedule 4",
+        "start": "01-04-2023",
+        "end": "01-05-2023",
+        "desc": "Schedule 4 description"
+    }
+]

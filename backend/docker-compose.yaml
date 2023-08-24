@@ -1,0 +1,19 @@
+services:
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    volumes:
+      - ./.data/db:/var/lib/mongo/data
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+      MONGO_INITDB_DATABASE: ${DB_NAME}
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - ${APP_PORT}:${APP_PORT}
