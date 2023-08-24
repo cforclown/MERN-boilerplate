@@ -1,0 +1,21 @@
+export declare function getEnvOrThrow(environmentVariableName: string): string;
+export declare const Environment: {
+    getNodeEnv: () => 'development' | 'test' | 'production';
+    getAppPort: () => string;
+    getClientBaseUrl: () => string[];
+    getDBUri: () => string;
+    getDBName: () => string;
+    getDBUsername: () => string;
+    getDBPassword: () => string;
+    getSessionSecret: () => string;
+    getSessionResave: () => boolean;
+    getSessionSaveUninitialized: () => boolean;
+    getSessionCookieSecure: () => boolean;
+    getSessionCookieMaxAge: () => number;
+    getAccessTokenSecret: () => string;
+    getRefreshTokenSecret: () => string;
+    getAccessTokenExpIn: () => number;
+    getAccessRefreshTokenExpIn: () => number;
+    getEncryptionAlgorithm: () => string;
+    getEncryptionKey: () => string;
+};
