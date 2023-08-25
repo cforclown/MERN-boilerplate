@@ -1,7 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import {
-  AUTH_ENDPOINT, SLACK_BOT_ENDPOINT, API_ENDPOINT
-} from './environment';
+import { API_ENDPOINT } from './environment';
 
 export enum HTTPStatusCodes {
   Ok = 200,
@@ -34,20 +32,8 @@ export interface IAPIEndpoint {
   headers?: Record<string, any>;
 }
 
-export const getMainEndpoint = (path: string, method?: IAPIEndpointMethod, header?: Record<string, any>): IAPIEndpoint => ({
+export const getAPIEndpoint = (path: string, method?: IAPIEndpointMethod, header?: Record<string, any>): IAPIEndpoint => ({
   url: API_ENDPOINT + path,
-  method,
-  headers: header,
-});
-
-export const getAuthEndpoint = (path: string, method?: IAPIEndpointMethod, header?: Record<string, any>): IAPIEndpoint => ({
-  url: AUTH_ENDPOINT + path,
-  method,
-  headers: header,
-});
-
-export const getSlackBotEndpoint = (path: string, method?: IAPIEndpointMethod, header?: Record<string, any>): IAPIEndpoint => ({
-  url: SLACK_BOT_ENDPOINT + path,
   method,
   headers: header,
 });

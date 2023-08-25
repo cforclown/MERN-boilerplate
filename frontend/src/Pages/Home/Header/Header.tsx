@@ -1,4 +1,4 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { RowsIcon } from '@radix-ui/react-icons';
 
 interface ILayoutHeader {
   showSidebarToggler: boolean;
@@ -18,7 +18,7 @@ export const HeaderBase = ({ showSidebarToggler, onToggleSidebar, className }: I
         <div className="cl-header-left">
           {showSidebarToggler && (
             <div className="cl-header-sidebar-toggle-btn" onClick={onToggleSidebarClick}>
-              <FontAwesomeIcon icon={['fas', 'align-justify']} />
+              <RowsIcon className='h-[24px]' />
             </div>
           )}
         </div>

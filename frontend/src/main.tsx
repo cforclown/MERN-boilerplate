@@ -1,13 +1,12 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App/index.tsx'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App/index.tsx';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import Store from './Store';
 import 'react-toastify/dist/ReactToastify.css';
-import './Assets/Icon';
-import './index.css'
+import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -18,4 +17,4 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       </BrowserRouter>
     </Provider>
   </React.StrictMode>,
-)
+);

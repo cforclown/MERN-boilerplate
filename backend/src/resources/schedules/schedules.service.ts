@@ -18,7 +18,7 @@ export class SchedulesService {
     return this.schedulesDao.getAll();
   }
 
-  async explore (payload: IExplorationPayload): Promise<IExplorationResponse<ISchedule[]>> {
+  async explore (payload: IExplorationPayload): Promise<IExplorationResponse<ISchedule>> {
     return this.schedulesDao.explore(payload);
   }
 

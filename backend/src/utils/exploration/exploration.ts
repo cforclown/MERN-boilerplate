@@ -7,14 +7,14 @@ export interface IExplorationPayload {
 }
 
 export interface IExplorationResponse<T> {
-  data: T,
+  data: T[],
   exploration: IExplorationPayload & {
     pagination: IPaginationResponse
   }
 }
 
 export const ExplorationDto = Joi.object({
-  query: Joi.string().allow(null).default(null),
+  query: Joi.string().allow(null, '').default(null),
   pagination: PaginationDto.required()
 });
 

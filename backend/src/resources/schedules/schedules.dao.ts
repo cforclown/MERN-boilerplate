@@ -22,36 +22,37 @@ export class SchedulesDao {
     return this.model.find({ }).exec();
   }
 
-  async explore ({ query, pagination }: IExplorationPayload): Promise<IExplorationResponse<ISchedule[]>> {
-    const result = await this.model.aggregate([
-      {
-        $match: {
-          $or: [
-            { name: { regex: query ?? '', $options: 'i' } },
-            { start: { regex: query ?? '', $options: 'i' } },
-            { end: { regex: query ?? '', $options: 'i' } },
-            { desc: { regex: query ?? '', $options: 'i' } }
-          ]
+  async explore ({ query, pagination }: IExplorationPayload): Promise<IExplorationResponse<ISchedule>> {
+    const result = await this.model
+      .aggregate([
+        {
+          $match: {
+            $or: [
+              { name: { $regex: query ?? '', $options: 'i' } },
+              { start: { $regex: query ?? '', $options: 'i' } },
+              { end: { $regex: query ?? '', $options: 'i' } },
+              { desc: { $regex: query ?? '', $options: 'i' } }
+            ]
+          }
+        },
+        {
+          $sort: {
+            [pagination.sort.by]: pagination.sort.order ?? IPaginationSortOrders.ASC
+          }
+        },
+        {
+          $facet: {
+            metadata: [
+              { $count: 'total' },
+              { $addFields: { page: pagination.page } }
+            ],
+            data: [
+              { $skip: (pagination.page - 1) * pagination.limit },
+              { $limit: pagination.limit }
+            ]
+          }
         }
-      },
-      {
-        $sort: {
-          [pagination.sort.by]: pagination.sort.order ?? IPaginationSortOrders.ASC
-        }
-      },
-      {
-        $facet: {
-          metadata: [
-            { $count: 'total' },
-            { $addFields: { page: pagination.page } }
-          ],
-          data: [
-            { $skip: (pagination.page - 1) * pagination.limit },
-            { $limit: pagination.limit }
-          ]
-        }
-      }
-    ])
+      ])
       .exec();
 
     const response = {

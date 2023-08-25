@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { configureStore } from '@reduxjs/toolkit';
-import createSagaMiddleware from 'redux-saga'
+import createSagaMiddleware from 'redux-saga';
 import LayoutReducer, { ILayoutState } from './Reducers/Layout/Layout';
 
 export interface IAppState {

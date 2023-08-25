@@ -1,6 +1,6 @@
+
+import { createSlice } from '@reduxjs/toolkit';
 import Themes, { ITheme, getTheme } from '../../../Themes/Themes';
-import { IReducerAction } from '../../../Types';
-import LayoutActionTypes from './LayoutActionTypes';
 
 export interface ISidebarState {
   hidden: boolean;
@@ -12,7 +12,7 @@ export interface ILayoutState {
   sidebarState: ISidebarState;
 }
 
-const layoutDefaultState: ILayoutState = {
+const layoutInitialState: ILayoutState = {
   theme: Themes.PRIMARY,
   sidebarState: {
     collapsed: false,
@@ -20,30 +20,28 @@ const layoutDefaultState: ILayoutState = {
   },
 };
 
-const LayoutReducer = (state: ILayoutState = layoutDefaultState, action: IReducerAction<any>): any => {
-  const newState = JSON.parse(JSON.stringify(state));
 
-  switch(action.type) {
-    case LayoutActionTypes.SHOW_SIDEBAR:
-      newState.sidebarState.hidden = false;
-      break;
-    case LayoutActionTypes.HIDE_SIDEBAR:
-      newState.sidebarState.hidden = true;
-      break;
-    case LayoutActionTypes.COLLAPSE_SIDEBAR:
-      newState.sidebarState.collapsed = true;
-      break;
-    case LayoutActionTypes.UNCOLLAPSE_SIDEBAR:
-      newState.sidebarState.collapsed = false;
-      break;
-    case LayoutActionTypes.CHANGE_THEME:
-      newState.theme = getTheme(action.payload.theme) ?? newState.theme;
-      break;
-    default:
-      break;
+const layoutSlice = createSlice({
+  name: 'layout',
+  initialState: layoutInitialState,
+  reducers: {
+    showSidebar(state) {
+      state.sidebarState.hidden = false;
+    },
+    hideSidebar(state) {
+      state.sidebarState.hidden = true;
+    },
+    collapseSidebar(state) {
+      state.sidebarState.collapsed = true;
+    },
+    uncollapseSidebar(state) {
+      state.sidebarState.collapsed = false;
+    },
+    changeTheme(state, action) {
+      state.theme = getTheme(action.payload.theme) ?? state.theme;
+    }
   }
+});
 
-  return newState;
-};
-
-export default LayoutReducer;
+export const { showSidebar, hideSidebar, collapseSidebar, uncollapseSidebar, changeTheme } = layoutSlice.actions;
+export default layoutSlice.reducer;

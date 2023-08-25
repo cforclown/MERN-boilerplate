@@ -2,11 +2,8 @@ deploy.sh
 rsa.key
 
 node_modules/
-error-log/
-photo_personil/
-tanda_pengenal/
-avatar/
-dump_log/
+build/
+
 
 *.env
 

@@ -10,9 +10,13 @@ export enum ThemeTypes {
 
 export interface IThemeSidebar {
   background: string;
-  iconWrapper?: string; // color
   color: string;
   img?: string;
+  itemColor?: string;
+  itemActiveColor?: string;
+  itemBg?: string;
+  itemActiveBg?: string;
+  itemIconWrapper?: string; // color
 }
 
 export interface IThemeHeader {
@@ -46,9 +50,11 @@ export const primaryTheme: ITheme = {
   },
   sidebar: {
     background: '#222f3e',
-    iconWrapper: '#3d3d3d',
-    color: 'white',
+    color: '#ffffff',
     img: sidebarPrimaryBg,
+    itemActiveColor: '#ffffff',
+    itemActiveBg: '#f53b57',
+    itemIconWrapper: '#3d3d3d',
   },
   header: {
     background: '#f53b57',

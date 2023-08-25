@@ -1,13 +1,13 @@
 import { Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import ComingSoon from '../../../Components/ComingSoon/ComingSoon.style';
+import { Schedules } from '../Pages/Schedules';
 
 function Content(): JSX.Element {
   return (
-    <div id="content" className="relative w-full h-full">
+    <div id="content" className="relative w-full h-full overflow-auto">
       <Suspense>
         <Routes>
-          <Route path="profile" element={<ComingSoon />} />
+          <Route path="schedules" element={<Schedules />} />
           <Route path="*" element={<Navigate replace to="/" />} />
         </Routes>
       </Suspense>
@@ -15,4 +15,4 @@ function Content(): JSX.Element {
   );
 }
 
-export default Content
+export default Content;

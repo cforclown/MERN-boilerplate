@@ -32,7 +32,7 @@ export class SchedulesController {
     return this.schedulesService.getAll();
   }
 
-  async explore ({ body }: Request): Promise<IExplorationResponse<ISchedule[]>> {
+  async explore ({ body }: Request): Promise<IExplorationResponse<ISchedule>> {
     return this.schedulesService.explore(body);
   }
 
