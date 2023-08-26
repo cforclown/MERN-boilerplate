@@ -38,12 +38,10 @@ function Home({ className }: IHome): JSX.Element {
   };
 
   const setSidebarCollapsed = (collapsed: boolean): void => {
-    console.log(`setSidebarCollapsed: ${collapsed}`);
     dispatch(collapsed ? collapseSidebar() : uncollapseSidebar());
   };
 
   const setSidebarHidden = (hide: boolean): void => {
-    console.log(`setSidebarHidden: ${hide}`);
     dispatch(hide ? hideSidebar() : showSidebar());
   };
 

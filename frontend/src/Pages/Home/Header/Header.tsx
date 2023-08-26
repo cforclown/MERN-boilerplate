@@ -23,8 +23,7 @@ export const HeaderBase = ({ showSidebarToggler, onToggleSidebar, className }: I
           )}
         </div>
         <div className="cl-header-center" />
-        <div className="cl-header-right">
-        </div>
+        <div className="cl-header-right" />
       </div>
     </div>
   );

@@ -23,4 +23,4 @@ function Page404({ fullscreen, msg, code }: IPage404): JSX.Element {
   );
 }
 
-export default Page404
+export default Page404;

@@ -1,8 +1,7 @@
-import { useState, useCallback } from 'react';
-import { ChevronDownIcon } from '@radix-ui/react-icons';
+import { useState, useCallback, useMemo } from 'react';
 import {
-  ColumnDef, 
   ColumnFiltersState, 
+  PaginationState, 
   SortingState, 
   VisibilityState, 
   flexRender, 
@@ -12,139 +11,160 @@ import {
   getSortedRowModel, 
   useReactTable 
 } from '@tanstack/react-table';
-import { Input } from '@/Components/ui/input';
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu';
 import { Button } from '@/Components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
-import { IPaginationResponse } from '@/Utils/exploration/pagination';
-
-export type IDataTableColumn<T> = ColumnDef<T> & {
-  label?: string;
-  accessorKey?: string;
-}
+import DataTableColumnsDropdown from './DataTableColumnsDropdown';
+import DataTableSimpleFilter from './DataTableSimpleFilter';
+import { DATA_TABLE_PAGE_SIZES, IDataTableColumn } from './DataTable.service';
+import DataTablePageSizeDropdown from './DataTablePageSizeDropdown';
+import { IPaginationResponse, IPaginationSort, PaginationSortOrders } from '@/Utils/exploration/pagination';
 
 interface IDataTableProps<T> {
   columns: IDataTableColumn<T>[];
   data: T[];
-  searchField?: string;
-  searchValue?: string;
+  isClientPagination?: boolean;
   pagination?: IPaginationResponse;
-  nextPage?: () => void;
-  previousPage?: () => void;
+  onNextPage?: () => void;
+  onPreviousPage?: () => void;
+  onPageSizeChange?: (size: number) => void;
+  onSortChange?: (sort: IPaginationSort) => void;
+  filterField?: string;
+  filterValue?: string;
+  onFilterChange?: (query: string) => void;
 }
 
 function DataTable<T>({ 
   columns, 
   data, 
-  searchField, 
+  filterField, 
+  filterValue,
+  isClientPagination,
   pagination,
-  nextPage,
-  previousPage 
+  onNextPage,
+  onPreviousPage,
+  onPageSizeChange,
+  onSortChange,
+  onFilterChange
 }: IDataTableProps<T>) {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
-    []
+  // PAGINATION VARIABLES (client pagination)-----------------------------------------------------
+  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: DATA_TABLE_PAGE_SIZES[1],
+  });
+  const clientPagination = useMemo(
+    () => ({
+      pageIndex,
+      pageSize,
+    }),
+    [pageIndex, pageSize]
   );
+  // --------------------------------------------------------------------------
+
+  // SORTING VARIABLES (client pagination) -----------------------------------------------------
+  const [sorting, setSorting] = useState<SortingState>((!isClientPagination && pagination) ? [{
+    id: pagination.sort.by,
+    desc: pagination.sort.order===PaginationSortOrders.DESC
+  }] : []);
+  // -------------------------------------------------------------------------------------------
+
+  // FILTER VARIABLES (client pagination) ----------------------------------------
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  // -----------------------------------------------------------------------------
+
+  // COLUMN VISIBILITY -----------------------------------------------------------
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  // -----------------------------------------------------------------------------
+
+  // SELECTION (comin soon) -----------------------------
   const [rowSelection, setRowSelection] = useState({});
+  // ----------------------------------------------------
 
   const table = useReactTable({
     columns,
     data,
-    // PAGINATION CONFIG -----------------------------------------------------------
-    getPaginationRowModel: pagination ? undefined : getPaginationRowModel(),
-    pageCount: pagination ? pagination.pageCount : undefined,
-    manualPagination: !!pagination,
-    // ----------------------------------------------------------------------------- 
-    onSortingChange: setSorting,
+    // PAGINATION CONFIG ----------------------------------------------------------------------------
+    getPaginationRowModel: (!isClientPagination && pagination) ? undefined : getPaginationRowModel(),
+    onPaginationChange: (!isClientPagination && pagination) ? undefined : setPagination,
+    pageCount: (!isClientPagination && pagination) ? pagination.pageCount : undefined,
+    manualPagination: !!(!isClientPagination && pagination),
+    // ----------------------------------------------------------------------------------------------
+    // SORT CONFIG --------------------------------------------------------------------------------------
+    onSortingChange: (!isClientPagination && pagination && onSortChange) 
+      ? (sort: any) => onSortChange({
+        by: sort()[0].id ?? columns[0].accessorKey,
+        order: sort()[0]?.desc ? PaginationSortOrders.DESC : PaginationSortOrders.ASC
+      }) 
+      : setSorting,
     getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
+    //---------------------------------------------------------------------------------------------------
+    onColumnFiltersChange: (!isClientPagination && pagination && onFilterChange) 
+      ? (filter: any) => onFilterChange(filter()?.[0]?.value ?? '') 
+      : setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    initialState: {
+      pagination: {
+        pageSize: (!isClientPagination && pagination) ? pagination.limit : clientPagination.pageSize
+      }
+    },
     state: {
-      sorting,
+      sorting: (!isClientPagination && pagination) ? [{
+        id: pagination.sort.by,
+        desc: pagination.sort.order===PaginationSortOrders.DESC
+      }] : sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
-      pagination: pagination ? {
+      pagination: (!isClientPagination && pagination) ? {
         pageIndex: pagination.page-1,
         pageSize: pagination.limit,
-      } : undefined
-    },
+      } : clientPagination
+    }
   });
 
   const getTableColumnDef = useCallback(() => {
     const cols = table.getAllColumns();
     return cols.map(col => {
       const colDef = columns.find(c => c.accessorKey===col.id);
-      return {
-        ...col,
+      return Object.assign({...col}, {
         columnDef: {
-          ...col.columnDef,
           label: colDef?.label ?? col.id
         }
-      };
+      });
     });
   }, [ table ]);
 
   return (
     <>
-      <div className="flex items-center py-4">
-        {searchField && (
-          <Input
+      <div className="flex justify-between items-center py-4">
+        {filterField && (
+          <DataTableSimpleFilter
+            value={filterValue}
+            onChange={onFilterChange}
+            column={table.getColumn(filterField ?? '')}
             placeholder="Filter..."
-            value={(table.getColumn(searchField)?.getFilterValue() as string) ?? ''}
-            onChange={(event) =>
-              table.getColumn(searchField)?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
           />
         )}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {getTableColumnDef()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.columnDef.label}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className='flex flex=row gap-3'>
+          <DataTableColumnsDropdown columns={getTableColumnDef()} />
+          <DataTablePageSizeDropdown
+            value={(!isClientPagination && pagination && onPageSizeChange) ? pagination.limit : table.getState().pagination.pageSize} 
+            onChange={(!isClientPagination && pagination && onPageSizeChange) ? onPageSizeChange : table.setPageSize}
+          />
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
@@ -179,36 +199,31 @@ function DataTable<T>({
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        {pagination ? (
-          <div className="flex-1 text-sm text-muted-foreground">
-            Page {pagination.page} of{' '} {pagination.pageCount}
-          </div>
-        ) : (
-          <div className="flex-1 text-sm text-muted-foreground">
-            {table.getFilteredSelectedRowModel().rows.length} of{' '}
-            {table.getFilteredRowModel().rows.length} row(s) selected.
-          </div>
-        )}
-        {pagination && (
-          <div className="space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => (pagination && previousPage) ? previousPage() : table.previousPage()}
-              disabled={pagination ? pagination.page===1 : !table.getCanPreviousPage()}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => (pagination && nextPage) ? nextPage() : table.nextPage()}
-              disabled={pagination ? pagination.page===pagination.pageCount : !table.getCanNextPage()}
-            >
-              Next
-            </Button>
-          </div>
-        )}
+        <div className="flex-1 text-sm text-muted-foreground">
+          Page
+          {' '}
+          {(!isClientPagination && pagination) ? pagination.page : table.getState().pagination.pageIndex + 1}
+          {' of '}
+          {(!isClientPagination && pagination) ? pagination.pageCount : table.getPageCount()}
+        </div>
+        <div className="space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => (!isClientPagination && pagination && onPreviousPage) ? onPreviousPage() : table.previousPage()}
+            disabled={(!isClientPagination && pagination) ? pagination.page===1 : !table.getCanPreviousPage()}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => (!isClientPagination && pagination && onNextPage) ? onNextPage() : table.nextPage()}
+            disabled={!isClientPagination && pagination ? pagination.page===pagination.pageCount : !table.getCanNextPage()}
+          >
+            Next
+          </Button>
+        </div>
       </div>
     </>
   );

@@ -2,7 +2,7 @@ import { model, Model } from 'mongoose';
 import { HttpCodes, RestApiException } from '../../utils/exceptions';
 import { ICreateSchedulePayload, ISchedule, IUpdateSchedulePayload } from './schedules.types';
 import { IExplorationPayload, IExplorationResponse } from '../../utils/exploration/exploration';
-import { IPaginationSortOrders } from '../../utils/exploration/pagination';
+import { PaginationSortOrders } from '../../utils/exploration/pagination';
 
 export class SchedulesDao {
   public static readonly INSTANCE_NAME = 'schedulesDao';
@@ -37,7 +37,7 @@ export class SchedulesDao {
         },
         {
           $sort: {
-            [pagination.sort.by]: pagination.sort.order ?? IPaginationSortOrders.ASC
+            [pagination.sort.by]: pagination.sort.order ?? PaginationSortOrders.ASC
           }
         },
         {

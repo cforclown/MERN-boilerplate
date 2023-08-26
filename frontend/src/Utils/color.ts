@@ -1,4 +1,3 @@
-/* eslint-disable no-bitwise */
 export const generateColor = (): string => `#${((1 << 24) * Math.random() | 0).toString(16).padStart(6, '0')}`;
 
 export const generateDarkColor = (): string => {

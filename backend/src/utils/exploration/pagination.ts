@@ -1,13 +1,13 @@
 import Joi from 'joi';
 
-export enum IPaginationSortOrders {
+export enum PaginationSortOrders {
   ASC = -1,
   DESC = 1
 }
 
 export interface IPaginationSort {
   by: string;
-  order?: IPaginationSortOrders;
+  order?: PaginationSortOrders;
 }
 
 export interface IPaginationPayload {

@@ -16,10 +16,15 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
-    'react/no-children-prop': 'error',
     'react-hooks/exhaustive-deps': 'off',
+    'react/no-children-prop': 'error',
+    'react/prop-types': 'off',
+    'react/self-closing-comp': ["error", { "component": true, "html": true }],
+    'react/jsx-indent': [2, 2],
     '@typescript-eslint/no-explicit-any': 'off',
     'quotes': ["error", "single"],
-    'semi': 'error'
+    'semi': 'error',
+    'no-console': 'error',
+    'arrow-body-style': ["error", "as-needed"]
   },
 }
