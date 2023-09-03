@@ -15,12 +15,13 @@ import { Button } from '@/Components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import DataTableColumnsDropdown from './DataTableColumnsDropdown';
 import DataTableSimpleFilter from './DataTableSimpleFilter';
-import { DATA_TABLE_PAGE_SIZES, IDataTableColumn } from './DataTable.service';
+import { DATA_TABLE_DEFAULT_PAGE_SIZES, IDataTableActionColumn } from './DataTable.service';
 import DataTablePageSizeDropdown from './DataTablePageSizeDropdown';
 import { IPaginationResponse, IPaginationSort, PaginationSortOrders } from '@/Utils/exploration/pagination';
+import { IMetadataField } from '@/Utils/metadata';
 
 interface IDataTableProps<T> {
-  columns: IDataTableColumn<T>[];
+  columns: IMetadataField<T>[];
   data: T[];
   isClientPagination?: boolean;
   pagination?: IPaginationResponse;
@@ -31,10 +32,11 @@ interface IDataTableProps<T> {
   filterField?: string;
   filterValue?: string;
   onFilterChange?: (query: string) => void;
+  actionColumn?: IDataTableActionColumn;
 }
 
 function DataTable<T>({ 
-  columns, 
+  columns: cols, 
   data, 
   filterField, 
   filterValue,
@@ -44,12 +46,15 @@ function DataTable<T>({
   onPreviousPage,
   onPageSizeChange,
   onSortChange,
-  onFilterChange
+  onFilterChange,
+  actionColumn
 }: IDataTableProps<T>) {
+  const columns = useMemo(() => [...cols, actionColumn] as IMetadataField<T>[], [ cols, actionColumn]) ;
+
   // PAGINATION VARIABLES (client pagination)-----------------------------------------------------
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: DATA_TABLE_PAGE_SIZES[1],
+    pageSize: DATA_TABLE_DEFAULT_PAGE_SIZES[1],
   });
   const clientPagination = useMemo(
     () => ({
@@ -198,7 +203,7 @@ function DataTable<T>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="flex items-center justify-end space-x-2 py-2">
         <div className="flex-1 text-sm text-muted-foreground">
           Page
           {' '}

@@ -1,11 +1,10 @@
 import { ColumnDef } from '@tanstack/react-table';
 
-export type IDataTableColumn<T> = ColumnDef<T> & {
+export type IDataTableActionColumn = ColumnDef<any> & {
   label?: string;
-  accessorKey?: string;
 }
 
-export const DATA_TABLE_PAGE_SIZES = [
+export const DATA_TABLE_DEFAULT_PAGE_SIZES = [
   10,
   25,
   50,

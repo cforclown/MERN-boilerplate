@@ -1,20 +1,4 @@
-## Quick run
-
-- clone this repo
-- open with your favorite editor
-
-```bash
-cp env-example .env
-docker compose up -d
-```
-
-For check status run
-
-```bash
-docker compose logs
-```
-
-## Comfortable development
+## Getting started
 
 - clone this repo
 - open with your favorite editor

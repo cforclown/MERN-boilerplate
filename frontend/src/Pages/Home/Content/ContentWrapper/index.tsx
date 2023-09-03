@@ -1,6 +1,6 @@
 import Loader from '@/Components/Loader/Loader.style';
-import classNames from 'classnames';
 import { PropsWithChildren } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 export interface IContentWrapper {
   loading?: boolean;
@@ -10,7 +10,7 @@ export interface IContentWrapper {
 function ContentWrapper({ loading, className, children }: PropsWithChildren<IContentWrapper>) {
   return (
     <>
-      <div className={classNames('relative w-full p-4', className)}>
+      <div className={twMerge('relative w-full p-4', className)}>
         {children}
       </div>
       {loading && (

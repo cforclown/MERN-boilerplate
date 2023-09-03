@@ -1,7 +1,7 @@
-import { IAPIEndpoint } from '../Utils/api-service';
-import { useFetchAxios } from './useFetchAxios';
+import { IAPIEndpoint } from '@/Utils/call-api';
+import { useFetchMainAPI } from './useFetchMainAPI';
 
-interface IUseApiArgs {
+export interface IUseApiArgs {
   endpoint: IAPIEndpoint;
   body?: any;
 }
@@ -13,9 +13,9 @@ export interface IUseApiResponse<T> {
   refetch: () => void;
 }
 
-export function useApi<T>({ endpoint, body }: IUseApiArgs): IUseApiResponse<T> {
+export function useAPI<T>({ endpoint, body }: IUseApiArgs): IUseApiResponse<T> {
   return useFetch<T>({
-    fetchHandler: useFetchAxios,
+    fetchHandler: useFetchMainAPI,
     endpoint,
     body,
   });

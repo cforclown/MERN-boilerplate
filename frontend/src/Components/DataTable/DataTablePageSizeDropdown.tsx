@@ -7,7 +7,7 @@ import {
 } from '../ui/dropdown-menu';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { Button } from '../ui/button';
-import { DATA_TABLE_PAGE_SIZES } from './DataTable.service';
+import { DATA_TABLE_DEFAULT_PAGE_SIZES } from './DataTable.service';
 
 interface IDataTablePageSizeDropdown {
   label?: string;
@@ -27,7 +27,7 @@ function DataTablePageSizeDropdown({ label, value, onChange, className }: IDataT
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuRadioGroup value={value.toString()} onValueChange={(value) => onChange(+value) }>
-            {DATA_TABLE_PAGE_SIZES.map((size) => (
+            {DATA_TABLE_DEFAULT_PAGE_SIZES.map((size) => (
               <DropdownMenuRadioItem key={size} value={size.toString()}>
                 {size}
               </DropdownMenuRadioItem>

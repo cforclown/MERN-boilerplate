@@ -1,8 +1,6 @@
-import { IDataTableColumn } from '@/Components/DataTable/DataTable.service';
 import { Button } from '@/Components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu';
-import { CaretSortIcon, DotsHorizontalIcon } from '@radix-ui/react-icons';
-import { Link } from 'react-router-dom';
+import { IMetadataField } from '@/Utils/metadata';
+import { CaretSortIcon } from '@radix-ui/react-icons';
 
 export interface ISchedule {
   _id: string
@@ -12,7 +10,7 @@ export interface ISchedule {
   desc: string;
 }
 
-export const schedulesColumnDefs: IDataTableColumn<ISchedule>[] = [
+export const schedulesFields: IMetadataField<ISchedule>[] = [
   {
     accessorKey: 'name',
     label: 'Name',
@@ -31,6 +29,9 @@ export const schedulesColumnDefs: IDataTableColumn<ISchedule>[] = [
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue('name')}</div>
     ),
+    type: {
+      value: 'STRING',
+    }
   },
   {
     accessorKey: 'start',
@@ -55,6 +56,9 @@ export const schedulesColumnDefs: IDataTableColumn<ISchedule>[] = [
         </div>
       );
     },
+    type: {
+      value: 'DATETIME'
+    }
   },
   {
     accessorKey: 'end',
@@ -79,37 +83,17 @@ export const schedulesColumnDefs: IDataTableColumn<ISchedule>[] = [
         </div>
       );
     },
+    type: {
+      value: 'DATETIME'
+    }
   },
   {
     accessorKey: 'desc',
     label: 'Description',
     header: () => <div className="text-center">Description</div>,
     cell: ({ row }) => <div className="text-left">{row.getValue('desc')}</div>,
-  },
-  {
-    id: 'actions',
-    label: 'Actions',
-    enableHiding: false,
-    cell: ({ row }) => {
-      const schedule = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>
-              <Link to={'/schedules/'+schedule._id}>
-                View schedule details
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
+    type: {
+      value: 'STRING'
+    }
+  }
 ];

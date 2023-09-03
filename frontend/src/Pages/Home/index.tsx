@@ -1,5 +1,4 @@
 import { useSelector, useDispatch } from 'react-redux';
-import classnames from 'classnames';
 import { collapseSidebar, hideSidebar, showSidebar, uncollapseSidebar } from '@/Store/Reducers/Layout/Layout';
 import Sidebar from './Sidebar/Sidebar.style';
 import Header from './Header/Header.style';
@@ -8,6 +7,7 @@ import { selectSidebarState } from '../../Store/Reducers/Layout/LayoutSelector';
 import { selectTheme } from '../../Store/Reducers/Layout/ThemeSelector';
 import { useEffect, useRef } from 'react';
 import { MD_BREAKPOINT } from '../../Utils/common';
+import { twMerge } from 'tailwind-merge';
 
 interface IHome {
   className?:string
@@ -47,7 +47,7 @@ function Home({ className }: IHome): JSX.Element {
 
   return (
     <div 
-      className={classnames(
+      className={twMerge(
         className, 
         'relative flex flex-row justify-start items-start h-screen overflow-hidden',
         `bg-${theme.body}`)

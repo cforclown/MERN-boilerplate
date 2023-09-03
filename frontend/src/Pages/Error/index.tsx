@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import { twMerge } from 'tailwind-merge';
 
 export interface IPage404 {
   fullscreen?: boolean;
@@ -9,7 +9,7 @@ export interface IPage404 {
 function Page404({ fullscreen, msg, code }: IPage404): JSX.Element {
   return (
     <div 
-      className={classNames(
+      className={twMerge(
           fullscreen ? 'w-screen h-screen' : 'w-full h-full',
           'overflow-hidden flex justify-center items-center'
       )}

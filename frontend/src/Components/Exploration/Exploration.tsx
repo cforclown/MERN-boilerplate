@@ -5,29 +5,34 @@ import ContentWrapper from '@/Pages/Home/Content/ContentWrapper';
 import DataTable from '@/Components/DataTable';
 import { IExplorationPayload, IExplorationResponse } from '@/Utils/exploration/exploration';
 import callApiWrapper from '@/Components/Wrappers/CallApiWrapper';
-import { DATA_TABLE_PAGE_SIZES, IDataTableColumn } from '@/Components/DataTable/DataTable.service';
+import { DATA_TABLE_DEFAULT_PAGE_SIZES, IDataTableActionColumn } from '@/Components/DataTable/DataTable.service';
 import { Switch } from '@/Components/ui/switch';
 import { Label } from '@/Components/ui/label';
 import { IPaginationSort, PaginationSortOrders } from '@/Utils/exploration/pagination';
 import TypographyH1 from '../Typography/H1';
 import { Button } from '../ui/button';
+import { IMetadataField } from '@/Utils/metadata';
 
 export interface IExplorationProps<T> {
   title?: string;
-  columns: IDataTableColumn<T>[];
+  columns: IMetadataField<T>[];
   clientPaginationFetchFunc?: () => Promise<T[]>;
   apiPaginationGetDataFunc: (payload: IExplorationPayload) => Promise<IExplorationResponse<T>>;
   filterField?: string;
+  actionColumn?: IDataTableActionColumn;
   disableClientPagination?: boolean;
+  onNewClick?: () => void;
 }
 
-export function Exploratin<T>({
+export function Exploration<T>({
   title,
   columns,
   clientPaginationFetchFunc,
   apiPaginationGetDataFunc,
   filterField,
-  disableClientPagination
+  disableClientPagination,
+  actionColumn,
+  onNewClick
 }: IExplorationProps<T>) {
   const hasIinitialFetchRef = useRef(false);
   const [loading, setLoading] = useState(true);
@@ -38,7 +43,7 @@ export function Exploratin<T>({
       query: '',
       pagination: {
         page: 1,
-        limit: DATA_TABLE_PAGE_SIZES[1],
+        limit: DATA_TABLE_DEFAULT_PAGE_SIZES[1],
         pageCount: 1,
         sort: { by: columns[0].accessorKey ?? '', order: PaginationSortOrders.ASC }
       }
@@ -148,7 +153,7 @@ export function Exploratin<T>({
     <ContentWrapper loading={loading}>
       <div className='flex flex-row justify-between align-center'>
         <TypographyH1 text={title ?? 'Untitled'} />
-        <div className='flex flex-row gap-2'>
+        <div className='flex flex-row items-center gap-2'>
           {!disableClientPagination && (
             <div className="flex items-center space-x-2">
               <Label htmlFor="airplane-mode">Client pagination</Label>
@@ -165,7 +170,15 @@ export function Exploratin<T>({
               />
             </div>
           )}
-          <Button variant="ghost" onClick={refreshData}><ReloadIcon /></Button>
+          <Button variant="ghost" size="sm" onClick={refreshData}><ReloadIcon /></Button>
+          {onNewClick && (
+            <Button 
+              size="sm" 
+              onClick={() => onNewClick()}
+            >
+              New
+            </Button>
+          )}
         </div>
       </div>
       <DataTable 
@@ -180,6 +193,7 @@ export function Exploratin<T>({
         filterField={filterField}
         filterValue={exploration.exploration.query}
         onFilterChange={setFilterValue}
+        actionColumn={actionColumn}
       />
     </ContentWrapper>
   );

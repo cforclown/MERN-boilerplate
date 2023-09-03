@@ -2,7 +2,7 @@ import { Column } from '@tanstack/react-table';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import { Button } from '../ui/button';
-import { IDataTableColumn } from './DataTable.service';
+import { IMetadataField } from '@/Utils/metadata';
 
 interface IDataTableColumnsDropdown<T> {
   columns: Column<T, unknown>[];
@@ -28,7 +28,7 @@ function DataTableColumnsDropdown<T>({ columns, className }: IDataTableColumnsDr
                   checked={column.getIsVisible()}
                   onCheckedChange={(value) => column.toggleVisibility(!!value)}
                 >
-                {(column.columnDef as IDataTableColumn<T>).label ?? column.id}
+                {(column.columnDef as IMetadataField<T>).label ?? column.id}
               </DropdownMenuCheckboxItem>
               ))}
         </DropdownMenuContent>
