@@ -1,8 +1,8 @@
 import Joi from 'joi';
 
 export enum PaginationSortOrders {
-  ASC = -1,
-  DESC = 1
+  ASC = 1,
+  DESC = -1
 }
 
 export interface IPaginationSort {

@@ -5,7 +5,7 @@ import { LoaderBase } from './Loader';
 const Loader = styled(LoaderBase)`
   width: 100%; 
   height: 100%;
-  background: #ffffff8a;
+  background: ${({ overlayColor }) => overlayColor ?? '#ffffff8a'};
 
   position: absolute;
   left: 0;

@@ -19,6 +19,7 @@ export const Environment = {
     return value;
   },
 
+  getApiVersion: (): string => getEnvOrThrow('API_VERSION'),
   getAppPort: (): string => getEnvOrThrow('APP_PORT'),
   getClientBaseUrl: (): string[] => {
     const appHost = getEnvOrThrow('CLIENT_BASE_URL');

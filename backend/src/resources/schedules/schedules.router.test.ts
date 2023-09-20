@@ -52,7 +52,7 @@ describe('schedules-router', () => {
   describe('get', () => {
     it('should successfully return schedule', async () => {
       const response = await request(app)
-        .get(`/api/schedules/${mockSchedule._id}`)
+        .get(`/api/v1/schedules/${mockSchedule._id}`)
         .expect(HttpCodes.Ok);
 
       expect(response).toHaveProperty('text');
@@ -68,7 +68,7 @@ describe('schedules-router', () => {
     it('should return 404 when schedule not found', async () => {
       mockSchedulesDaoGet.mockReturnValueOnce(Promise.resolve(null));
       await request(app)
-        .get(`/api/schedules/${mockSchedule._id}`)
+        .get(`/api/v1/schedules/${mockSchedule._id}`)
         .expect(HttpCodes.NotFound);
     });
   });
@@ -76,7 +76,7 @@ describe('schedules-router', () => {
   describe('getAll', () => {
     it('should successfully get all schedules', async () => {
       const response = await request(app)
-        .get('/api/schedules')
+        .get('/api/v1/schedules')
         .expect(HttpCodes.Ok);
       expect(response).toHaveProperty('text');
       const body = JSON.parse(response.text);
@@ -92,7 +92,7 @@ describe('schedules-router', () => {
       mockSchedulesDaoGetAll.mockReturnValueOnce(Promise.resolve([]));
 
       const response = await request(app)
-        .get('/api/schedules')
+        .get('/api/v1/schedules')
         .expect(HttpCodes.Ok);
       expect(response).toHaveProperty('text');
       const body = JSON.parse(response.text);
@@ -104,7 +104,7 @@ describe('schedules-router', () => {
       mockSchedulesDaoGetAll.mockRejectedValueOnce(new Error('error'));
 
       await request(app)
-        .get('/api/schedules')
+        .get('/api/v1/schedules')
         .expect(HttpCodes.Internal);
     });
   });
@@ -112,7 +112,7 @@ describe('schedules-router', () => {
   describe('explore', () => {
     it('should successfully get schedules with correct exploration payload', async () => {
       const response = await request(app)
-        .post('/api/schedules/explore')
+        .post('/api/v1/schedules/explore')
         .send(mockExplorationPayload)
         .expect(HttpCodes.Ok);
       expect(response).toHaveProperty('text');
@@ -141,7 +141,7 @@ describe('schedules-router', () => {
       mockSchedulesDaoGetAll.mockRejectedValueOnce(new Error('error'));
 
       await request(app)
-        .get('/api/schedules')
+        .get('/api/v1/schedules')
         .expect(HttpCodes.Internal);
     });
   });
@@ -149,7 +149,7 @@ describe('schedules-router', () => {
   describe('update', () => {
     it('should successfully update schedule', async () => {
       const response = await request(app)
-        .patch('/api/schedules')
+        .patch('/api/v1/schedules')
         .send(mockUpdateSchedulePayload)
         .expect(HttpCodes.Ok);
       expect(response).toHaveProperty('text');
@@ -164,7 +164,7 @@ describe('schedules-router', () => {
 
     it('should successfully update schedule when only some of the field is provided', async () => {
       const response = await request(app)
-        .patch('/api/schedules')
+        .patch('/api/v1/schedules')
         .send({
           _id: 'schedule-id',
           name: 'new-name'
@@ -184,7 +184,7 @@ describe('schedules-router', () => {
       mockSchedulesDaoUpdate.mockResolvedValueOnce(null);
 
       await request(app)
-        .patch('/api/schedules')
+        .patch('/api/v1/schedules')
         .send(mockUpdateSchedulePayload)
         .expect(HttpCodes.NotFound);
     });
@@ -193,7 +193,7 @@ describe('schedules-router', () => {
   describe('delete', () => {
     it('should successfully delete a schedule', async () => {
       const response = await request(app)
-        .delete('/api/schedules/' + mockSchedule._id)
+        .delete('/api/v1/schedules/' + mockSchedule._id)
         .expect(HttpCodes.Ok);
       expect(response).toHaveProperty('text');
       const body = JSON.parse(response.text);
@@ -204,7 +204,7 @@ describe('schedules-router', () => {
     it('should throw an error when data access object throw an error', async () => {
       mockSchedulesDaoDelete.mockRejectedValueOnce(new RestApiException('internal server error', 500));
       await request(app)
-        .delete('/api/schedules/' + mockSchedule._id)
+        .delete('/api/v1/schedules/' + mockSchedule._id)
         .expect(HttpCodes.Internal);
     });
   });

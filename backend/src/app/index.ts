@@ -14,7 +14,8 @@ import { Environment } from '../utils';
 
 function App (): Express {
   const app = express();
-  app.use(logger(':remote-addr :method :url :status :response-time ms - :res[content-length]'));
+  app.use(logger('dev'));
+  // app.use(logger(':remote-addr :method :url :status :response-time ms - :res[content-length]'));
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ limit: '10mb', extended: false }));
   app.use(
@@ -40,7 +41,7 @@ function App (): Express {
   // #region ============================ SWAGGER CONFIG =============================
   // reference: https://swagger.io/specification/#infoObject
   const swaggerDocs = swaggerJsDoc(swaggerConfig);
-  app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+  app.use(`/api/${Environment.getApiVersion()}/docs`, swaggerUI.serve, swaggerUI.setup(swaggerDocs));
   // #endregion -----------------------------------------------------------------------
 
   app.use('/', MainRouter());

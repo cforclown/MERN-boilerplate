@@ -1,10 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
-import { IUseApiArgs, IUseApiResponse } from './useApi';
-import { axiosFetch } from '@/Utils/call-api';
+import { IUseApiResponse } from './useApi';
+import { IAPIEndpoint, axiosFetch } from '@/Utils/call-api';
 
-export interface IUseFetchAxios extends IUseApiArgs {}
-
-export function useFetchAxios<T>({ endpoint, body }: IUseFetchAxios): IUseApiResponse<T> {
+export function useFetchAxios<T>(endpoint: IAPIEndpoint, body?: any): IUseApiResponse<T> {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);

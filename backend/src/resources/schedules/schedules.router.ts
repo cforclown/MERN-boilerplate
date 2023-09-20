@@ -13,7 +13,7 @@ export function SchedulesRouter ({ schedulesController }:{ schedulesController:S
 
   /**
    * @swagger
-   * /api/schedules/{objectId}:
+   * /api/v1/schedules/{objectId}:
    *      get:
    *          tags:
    *              - Schedules
@@ -30,7 +30,7 @@ export function SchedulesRouter ({ schedulesController }:{ schedulesController:S
 
   /**
    * @swagger
-   * /api/schedules:
+   * /api/v1/schedules:
    *      get:
    *          tags:
    *              - Schedules
@@ -43,7 +43,7 @@ export function SchedulesRouter ({ schedulesController }:{ schedulesController:S
 
   /**
    * @swagger
-   * /api/schedules/explore:
+   * /api/v1/schedules/explore:
    *      post:
    *          tags:
    *              - Schedules
@@ -63,7 +63,7 @@ export function SchedulesRouter ({ schedulesController }:{ schedulesController:S
 
   /**
    * @swagger
-   * /api/schedules:
+   * /api/v1/schedules:
    *      post:
    *          tags:
    *              - Schedules
@@ -83,7 +83,7 @@ export function SchedulesRouter ({ schedulesController }:{ schedulesController:S
 
   /**
    * @swagger
-   * /api/schedules:
+   * /api/v1/schedules:
    *      patch:
    *          tags:
    *              - Schedules
@@ -103,7 +103,7 @@ export function SchedulesRouter ({ schedulesController }:{ schedulesController:S
 
   /**
    * @swagger
-   * /api/schedules:
+   * /api/v1/schedules:
    *      delete:
    *          tags:
    *              - Schedules

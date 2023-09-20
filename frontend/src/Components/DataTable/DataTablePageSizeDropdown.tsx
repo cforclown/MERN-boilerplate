@@ -8,6 +8,7 @@ import {
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { Button } from '../ui/button';
 import { DATA_TABLE_DEFAULT_PAGE_SIZES } from './DataTable.service';
+import { useTranslation } from 'react-i18next';
 
 interface IDataTablePageSizeDropdown {
   label?: string;
@@ -17,12 +18,14 @@ interface IDataTablePageSizeDropdown {
 }
 
 function DataTablePageSizeDropdown({ label, value, onChange, className }: IDataTablePageSizeDropdown) {
+  const { t } = useTranslation();
+
   return (
     <div  className={className}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="ml-auto">
-            {label ?? `Page size (${value})`} <ChevronDownIcon className="ml-2 h-4 w-4" />
+          <Button variant="outline" className="ml-auto whitespace-nowrap">
+            {label ?? t('common.pageSizeWithValue', { value })} <ChevronDownIcon className="ml-2 h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

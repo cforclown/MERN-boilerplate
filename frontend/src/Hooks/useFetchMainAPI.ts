@@ -2,12 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { IUseApiResponse } from './useApi';
 import { IAPIEndpoint, callMainAPI } from '@/Utils/call-api';
 
-export interface IUseFetchMainAPI {
-  endpoint: IAPIEndpoint;
-  body?: any;
-}
-
-export function useFetchMainAPI<T>({ endpoint, body }: IUseFetchMainAPI): IUseApiResponse<T> {
+export function useFetchMainAPI<T>(endpoint: IAPIEndpoint, body?: any): IUseApiResponse<T> {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);

@@ -1,12 +1,12 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { collapseSidebar, hideSidebar, showSidebar, uncollapseSidebar } from '@/Store/Reducers/Layout/Layout';
+import { collapseSidebar, hideSidebar, setIsSM, showSidebar, uncollapseSidebar } from '@/Store/Reducers/Layout/Layout';
 import Sidebar from './Sidebar/Sidebar.style';
 import Header from './Header/Header.style';
 import Content from './Content';
-import { selectSidebarState } from '../../Store/Reducers/Layout/LayoutSelector';
+import { selectLayoutState } from '../../Store/Reducers/Layout/LayoutSelector';
 import { selectTheme } from '../../Store/Reducers/Layout/ThemeSelector';
 import { useEffect, useRef } from 'react';
-import { MD_BREAKPOINT } from '../../Utils/common';
+import { MD_BREAKPOINT, SM_BREAKPOINT } from '../../Utils/common';
 import { twMerge } from 'tailwind-merge';
 
 interface IHome {
@@ -17,7 +17,7 @@ function Home({ className }: IHome): JSX.Element {
   const ismounted = useRef(false);
   const theme = useSelector(selectTheme);
   const dispatch = useDispatch();
-  const sidebarState = useSelector(selectSidebarState());
+  const layoutState = useSelector(selectLayoutState());
 
   useEffect(() => {
     ismounted.current = true;
@@ -35,6 +35,15 @@ function Home({ className }: IHome): JSX.Element {
   const onresize = (): void => {
     const currentWidth = window.innerWidth;
     setSidebarCollapsed(currentWidth <= MD_BREAKPOINT);
+    if(currentWidth <= SM_BREAKPOINT && !layoutState.isSM) {
+      setLayoutIsSM(true);
+    } else if(currentWidth > SM_BREAKPOINT && layoutState.isSM) {
+      setLayoutIsSM(false);
+    }
+  };
+
+  const setLayoutIsSM = (isSM: boolean): void => {
+    dispatch(setIsSM(isSM));
   };
 
   const setSidebarCollapsed = (collapsed: boolean): void => {
@@ -54,14 +63,14 @@ function Home({ className }: IHome): JSX.Element {
       }
     >
       <Sidebar 
-        collapsed={sidebarState.hidden ? false : sidebarState.collapsed} 
-        hidden={sidebarState.hidden} 
+        collapsed={layoutState.isSM ? false : layoutState.sidebarState.collapsed} 
+        hidden={layoutState.sidebarState.hidden} 
         onBreakpoint={setSidebarHidden} 
         onBackdropClick={() => setSidebarHidden(true)} 
       />
 
       <div className="relative h-full w-full flex flex-col justify-start items-center">
-        <Header showSidebarToggler={!!sidebarState.hidden} onToggleSidebar={() => setSidebarHidden(false)} />
+        <Header showSidebarToggler={!!layoutState.sidebarState.hidden} onToggleSidebar={() => setSidebarHidden(false)} />
         <Content />
       </div>
     </div>

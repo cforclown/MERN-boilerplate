@@ -14,7 +14,7 @@ function DataTableSimpleFilter({ value, onChange, column, placeholder }: IDataTa
       placeholder={placeholder ?? 'Filter...'}
       value={value ?? (column?.getFilterValue() as string) ?? ''}
       onChange={(e) => onChange ? onChange(e.target.value) : column?.setFilterValue(e.target.value)}
-      className="max-w-sm"
+      className="w-full sm:w-sm mx-w-full sm:max-w-sm"
     />
   );
 }

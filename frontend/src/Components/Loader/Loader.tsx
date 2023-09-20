@@ -1,6 +1,7 @@
 import StyledSpinner from '../Spinner/Spinner.style';
 
 export interface ILoaderProps {
+  overlayColor?: string;
   className?: string
 }
 

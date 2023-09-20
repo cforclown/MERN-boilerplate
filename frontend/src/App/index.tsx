@@ -7,6 +7,7 @@ import { selectTheme } from '../Store/Reducers/Layout/ThemeSelector';
 import Loader from '../Components/Loader/Loader.style';
 import Page404 from '../Pages/Error';
 import { ITheme } from '../Themes/Themes';
+import AlertDialogGlobal from '@/Components/AlertDialogContainer/AlertDialogGlobal';
 
 const App = (): React.ReactElement => {
   const theme: ITheme = useSelector(selectTheme);
@@ -21,6 +22,7 @@ const App = (): React.ReactElement => {
           </Routes>
         </Suspense>
       </div>
+      <AlertDialogGlobal />
     </ThemeProvider>
   );
 };

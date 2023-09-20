@@ -15,7 +15,7 @@ export interface IDynamicFormFieldItem {
 function DynamicFormFieldItem({ field, rawField, isEditing }: IDynamicFormFieldItem): JSX.Element {
   return (
     <FormItem>
-      <FormLabel>{rawField.label}</FormLabel>
+      <FormLabel className='font-bold'>{rawField.label}</FormLabel>
       <FormControl>
         <DynamicFormFieldItemInput formField={field} rawField={rawField} isEditing={isEditing} />
       </FormControl>

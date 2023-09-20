@@ -1,11 +1,6 @@
 import { IAPIEndpoint } from '@/Utils/call-api';
 import { useFetchMainAPI } from './useFetchMainAPI';
 
-export interface IUseApiArgs {
-  endpoint: IAPIEndpoint;
-  body?: any;
-}
-
 export interface IUseApiResponse<T> {
   data: T | null;
   loading: boolean;
@@ -13,7 +8,7 @@ export interface IUseApiResponse<T> {
   refetch: () => void;
 }
 
-export function useAPI<T>({ endpoint, body }: IUseApiArgs): IUseApiResponse<T> {
+export function useAPI<T>(endpoint: IAPIEndpoint, body?: any): IUseApiResponse<T> {
   return useFetch<T>({
     fetchHandler: useFetchMainAPI,
     endpoint,
@@ -28,5 +23,5 @@ export interface IUseFetchArgs {
 }
 
 export function useFetch<T>({ fetchHandler, endpoint, body }: IUseFetchArgs): IUseApiResponse<T> {
-  return fetchHandler({ endpoint, body });
+  return fetchHandler(endpoint, body);
 }

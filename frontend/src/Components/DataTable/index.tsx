@@ -52,17 +52,10 @@ function DataTable<T>({
   const columns = useMemo(() => [...cols, actionColumn] as IMetadataField<T>[], [ cols, actionColumn]) ;
 
   // PAGINATION VARIABLES (client pagination)-----------------------------------------------------
-  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
+  const [clientPagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: DATA_TABLE_DEFAULT_PAGE_SIZES[1],
   });
-  const clientPagination = useMemo(
-    () => ({
-      pageIndex,
-      pageSize,
-    }),
-    [pageIndex, pageSize]
-  );
   // --------------------------------------------------------------------------
 
   // SORTING VARIABLES (client pagination) -----------------------------------------------------
@@ -143,7 +136,7 @@ function DataTable<T>({
 
   return (
     <>
-      <div className="flex justify-between items-center py-4">
+      <div className="flex flex-col sm:flex-row justify-start sm:justify-between items-end sm:itens-center py-4 gap-2">
         {filterField && (
           <DataTableSimpleFilter
             value={filterValue}
@@ -152,7 +145,7 @@ function DataTable<T>({
             placeholder="Filter..."
           />
         )}
-        <div className='flex flex=row gap-3'>
+        <div className='flex flex-row gap-2'>
           <DataTableColumnsDropdown columns={getTableColumnDef()} />
           <DataTablePageSizeDropdown
             value={(!isClientPagination && pagination && onPageSizeChange) ? pagination.limit : table.getState().pagination.pageSize} 

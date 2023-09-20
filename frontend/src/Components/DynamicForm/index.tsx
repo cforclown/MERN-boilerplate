@@ -1,5 +1,5 @@
 
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import * as zod from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -7,22 +7,24 @@ import { generateFormDefaultValues, generateFormFields, generateFormSchema } fro
 import { IMetadataField } from '@/Utils/metadata';
 import { Form } from '../ui/form';
 import { Button } from '../ui/button';
-export interface IDynamicForm<T> {
+
+export interface IDynamicFormProps<T> {
   fields: IMetadataField<T>[];
+  initialData?: T | null;
+  onSubmitData: (data: Record<string, any>) => void;
 }
 
-function DynamicForm<T>({ fields }: IDynamicForm<T>): JSX.Element {
+function DynamicForm<T>({ fields, initialData, onSubmitData }: IDynamicFormProps<T>): JSX.Element {
   const formSchema = useMemo(() => generateFormSchema(fields), [fields]);
   
   const form = useForm<zod.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: generateFormDefaultValues(fields),
+    defaultValues: initialData ?? generateFormDefaultValues(fields),
   });
 
-  function onSubmit(values: zod.infer<typeof formSchema>) {
-    // eslint-disable-next-line no-console
-    console.log(values);
-  }
+  const onSubmit = useCallback((values: zod.infer<typeof formSchema>) => {
+    onSubmitData(values);
+  }, []);
 
   return (
     <Form {...form}>

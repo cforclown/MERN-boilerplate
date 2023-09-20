@@ -3,6 +3,7 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { schedulesFields } from './Schedules.metadata';
 import { getAPIEndpoint } from '@/Utils/call-api';
 import { useCallback } from 'react';
+import DashboardContentWrapper from '@/Components/Wrappers/DashboardContentWrapper';
 
 function ScheduleDetails() {
   const { id: scheduleId } = useParams();
@@ -18,12 +19,14 @@ function ScheduleDetails() {
   }
 
   return (
-    <DataDetails
-      title="Schedule"
-      endpoint={endpoint}
-      fields={schedulesFields}
-      onEditClick={onEditClick}
-    />
+    <DashboardContentWrapper>
+      <DataDetails
+        title="Schedule"
+        endpoint={endpoint}
+        fields={schedulesFields}
+        onEditClick={onEditClick}
+      />
+    </DashboardContentWrapper>
   );
 }
 

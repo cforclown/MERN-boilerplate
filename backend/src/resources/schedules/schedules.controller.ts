@@ -15,6 +15,7 @@ export class SchedulesController {
     this.get = this.get.bind(this);
     this.getAll = this.getAll.bind(this);
     this.explore = this.explore.bind(this);
+    this.create = this.create.bind(this);
     this.update = this.update.bind(this);
     this.delete = this.delete.bind(this);
   }

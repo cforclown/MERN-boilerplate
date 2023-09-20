@@ -2,6 +2,7 @@ import * as zod from 'zod';
 import { IMetadataField, IMetadataFieldType } from '@/Utils/metadata';
 import { UseFormReturn } from 'react-hook-form';
 import DynamicFormField from './DynamicFormField';
+import { Skeleton } from '../ui/skeleton';
 
 const getDefaultValue = (fieldType: IMetadataFieldType): any => {
   if (fieldType.default) {
@@ -23,6 +24,20 @@ export function generateFormDefaultValues<T>(fields: IMetadataField<T>[]): Recor
     acc[curr.accessorKey as string] = getDefaultValue(curr.type);
     return acc;
   }, {});
+}
+
+export function generateFormSkeleton<T>(fields: IMetadataField<T>[]): JSX.Element[] {
+  const skeletons = fields.filter(f => f.accessorKey).map((field) => (
+    <div key={field.accessorKey} className="flex flex-col items-start gap-4 mb-8">
+      <Skeleton className="h-6 w-[25%]" />
+      <Skeleton className="h-8 w-[80%]" />
+    </div>
+  ));
+  skeletons.push(
+    <Skeleton key='submit-btn' className="h-10 w-[75px]" />
+  );
+    
+  return skeletons;
 }
 
 export const getTextInputType = (type: IMetadataFieldType): string => {
@@ -64,10 +79,31 @@ function getFieldSchema<T>(field: IMetadataField<T>, isEditing?: boolean): any {
       });
       return (!(type.noneditable === 'static' && isEditing) && type.required) ? schema.nonempty() : schema;
     case 'DATE':
-    case 'DATETIME':
       return zod.date({
         required_error: (!(type.noneditable === 'static' && isEditing) && type.required) ? 'Please select a date' : undefined,
         invalid_type_error: 'That\'s not a date!',
+      });
+    case 'DATETIME':
+      return zod.string({
+        required_error: (!(type.noneditable === 'static' && isEditing) && type.required) ? 'Please select a date' : undefined,
+        invalid_type_error: 'That\'s not a date!',
+      }).transform((val, ctx) => {
+        try {
+          const valDate = new Date(val).toISOString();
+          if (!zod.string().datetime().safeParse(valDate).success) {
+            return ctx.addIssue({
+              code: zod.ZodIssueCode.custom,
+              message: 'Invalid datetime format'
+            });
+          }
+          
+          return valDate;
+        } catch (err) {
+          return ctx.addIssue({
+            code: zod.ZodIssueCode.custom,
+            message: 'Invalid datetime format'
+          });
+        }
       });
     case 'NUMBER':
       return zod.number({

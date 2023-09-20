@@ -1,7 +1,7 @@
+/* eslint-disable react-refresh/only-export-components */
 import { useCallback, useState, useEffect, useRef } from 'react';
 import { mergeDeepRight, omit } from 'ramda';
 import { ReloadIcon } from '@radix-ui/react-icons';
-import ContentWrapper from '@/Pages/Home/Content/ContentWrapper';
 import DataTable from '@/Components/DataTable';
 import { IExplorationPayload, IExplorationResponse } from '@/Utils/exploration/exploration';
 import callApiWrapper from '@/Components/Wrappers/CallApiWrapper';
@@ -12,8 +12,9 @@ import { IPaginationSort, PaginationSortOrders } from '@/Utils/exploration/pagin
 import TypographyH1 from '../Typography/H1';
 import { Button } from '../ui/button';
 import { IMetadataField } from '@/Utils/metadata';
+import withCommonState, { IWithCommonStateProps } from '../HOC/withCommonState';
 
-export interface IExplorationProps<T> {
+export interface IExplorationProps<T> extends IWithCommonStateProps {
   title?: string;
   columns: IMetadataField<T>[];
   clientPaginationFetchFunc?: () => Promise<T[]>;
@@ -21,10 +22,11 @@ export interface IExplorationProps<T> {
   filterField?: string;
   actionColumn?: IDataTableActionColumn;
   disableClientPagination?: boolean;
+  newBtnText?: string;
   onNewClick?: () => void;
 }
 
-export function Exploration<T>({
+function Exploration<T>({
   title,
   columns,
   clientPaginationFetchFunc,
@@ -32,10 +34,12 @@ export function Exploration<T>({
   filterField,
   disableClientPagination,
   actionColumn,
-  onNewClick
+  newBtnText,
+  onNewClick,
+  t,
+  setLoading
 }: IExplorationProps<T>) {
   const hasIinitialFetchRef = useRef(false);
-  const [loading, setLoading] = useState(true);
   const [isClientPagination, setIsClientPagination] = useState(false);
   const [exploration, setExploration] = useState<IExplorationResponse<T>>({
     data: [],
@@ -66,25 +70,6 @@ export function Exploration<T>({
     }
   }, setLoading), [ exploration ]);
 
-  useEffect(() =>{
-    getData(exploration.exploration);
-    hasIinitialFetchRef.current = true;
-  }, []);
-
-  useEffect(() =>{
-    if(!hasIinitialFetchRef.current) {
-      return;
-    }
-
-    getData(exploration.exploration);
-  }, [ 
-    exploration.exploration.pagination.page,
-    exploration.exploration.pagination.limit,
-    exploration.exploration.pagination.sort.by,
-    exploration.exploration.pagination.sort.order,
-    isClientPagination
-  ]);
-
   useEffect(() => {
     if(!hasIinitialFetchRef.current) {
       return;
@@ -95,6 +80,20 @@ export function Exploration<T>({
       onFilterChangeFetchTimeoutRef.current = undefined;
     }, 750);
   }, [ exploration.exploration.query ]);
+
+  useEffect(() =>{
+    getData(exploration.exploration);
+
+    if(!hasIinitialFetchRef.current) {
+      hasIinitialFetchRef.current = true;
+    }
+  }, [ 
+    exploration.exploration.pagination.page,
+    exploration.exploration.pagination.limit,
+    exploration.exploration.pagination.sort.by,
+    exploration.exploration.pagination.sort.order,
+    isClientPagination
+  ]);
 
   const refreshData = useCallback(() => {
     getData(exploration.exploration);
@@ -150,13 +149,13 @@ export function Exploration<T>({
   };
 
   return (
-    <ContentWrapper loading={loading}>
-      <div className='flex flex-row justify-between align-center'>
+    <>
+      <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2'>
         <TypographyH1 text={title ?? 'Untitled'} />
-        <div className='flex flex-row items-center gap-2'>
+        <div className='self-end flex flex-row items-center gap-2'>
           {!disableClientPagination && (
             <div className="flex items-center space-x-2">
-              <Label htmlFor="airplane-mode">Client pagination</Label>
+              <Label htmlFor="airplane-mode">{t('common.clientPagination')}</Label>
               <Switch 
                 checked={isClientPagination} 
                 onCheckedChange={(value) => {
@@ -176,7 +175,7 @@ export function Exploration<T>({
               size="sm" 
               onClick={() => onNewClick()}
             >
-              New
+              {newBtnText ?? t('common.new')}
             </Button>
           )}
         </div>
@@ -195,6 +194,8 @@ export function Exploration<T>({
         onFilterChange={setFilterValue}
         actionColumn={actionColumn}
       />
-    </ContentWrapper>
+    </>
   );
 }
+
+export default withCommonState(Exploration<any>, true);
