@@ -1,5 +1,5 @@
-import mongoose, { Types } from 'mongoose';
-import { ISchedule, ScheduleModelSchema, SchedulesDao } from '.';
+import mongoose, { model, Types } from 'mongoose';
+import { ISchedule, SchedulesDao, SchedulesSchema } from '.';
 import { RestApiException } from '../../utils/exceptions';
 import { mockCreateSchedulePayload } from '../../test/mock-data';
 import MockDB from '../../test/mock-db';
@@ -7,8 +7,8 @@ import { docToJSON, expectDocumentToEqual } from '../../test/test-utils';
 
 describe('schedules-dao', () => {
   const db = new MockDB();
-  mongoose.model<ISchedule>(SchedulesDao.MODEL_NAME, ScheduleModelSchema);
-  const schedulesDao = new SchedulesDao();
+  mongoose.model<ISchedule>(SchedulesDao.MODEL_NAME, SchedulesSchema);
+  const schedulesDao = new SchedulesDao(model<ISchedule>(SchedulesDao.MODEL_NAME));
 
   beforeAll(async () => {
     await db.connect();

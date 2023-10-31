@@ -86,6 +86,7 @@
     "no-console": [
       "error"
     ],
+    "no-useless-constructor": "off",
     "no-eval": [
       "error"
     ],

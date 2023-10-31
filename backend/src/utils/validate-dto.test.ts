@@ -2,7 +2,7 @@ import Joi from 'joi';
 import { mockRequest, mockResponse } from 'jest-mock-req-res';
 import { validateBody, validateParams, validateQuery } from './validate-dto';
 import { HttpCodes } from './exceptions';
-import { ObjectIdSchema } from '../schemas/common-schema';
+import { pathIdSchema } from '../schemas/common';
 
 describe('validate-dto', () => {
   const res = mockResponse({});
@@ -58,11 +58,11 @@ describe('validate-dto', () => {
     it('should successfully validate params', () => {
       const req = mockRequest({
         params: {
-          objectId: 'objectId'
+          id: 'id'
         }
       });
 
-      const event = validateParams(ObjectIdSchema);
+      const event = validateParams(pathIdSchema);
       expect(typeof event).toBe('function');
       event(req, res, mockNext.next);
       expect(spyNext).toHaveBeenCalled();
@@ -71,7 +71,7 @@ describe('validate-dto', () => {
     it('should send error response with bad request code when validating request params', () => {
       const req = mockRequest({ params: {} });
 
-      const event = validateParams(ObjectIdSchema);
+      const event = validateParams(pathIdSchema);
       expect(typeof event).toBe('function');
       event(req, res, mockNext.next);
       expect(spyNext).not.toHaveBeenCalled();
@@ -85,11 +85,11 @@ describe('validate-dto', () => {
     it('should successfully validate query', () => {
       const req = mockRequest({
         query: {
-          objectId: 'objectId'
+          id: 'id'
         }
       });
 
-      const event = validateQuery(ObjectIdSchema);
+      const event = validateQuery(pathIdSchema);
       expect(typeof event).toBe('function');
       event(req, res, mockNext.next);
       expect(spyNext).toHaveBeenCalled();
@@ -98,7 +98,7 @@ describe('validate-dto', () => {
     it('should send error response with bad request code when validating request queries', () => {
       const req = mockRequest({ query: {} });
 
-      const event = validateQuery(ObjectIdSchema);
+      const event = validateQuery(pathIdSchema);
       expect(typeof event).toBe('function');
       event(req, res, mockNext.next);
       expect(spyNext).not.toHaveBeenCalled();

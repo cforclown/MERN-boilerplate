@@ -1,5 +1,4 @@
-import { Environment } from '../environment';
-import { Logger } from '../logger';
+import { ELogLevel, Logger } from '../logger';
 import { IException } from '../types';
 
 export abstract class BaseException extends Error {
@@ -7,9 +6,6 @@ export abstract class BaseException extends Error {
     super(message);
     this.name = `[${exception.code}] ${exception.name}`;
 
-    if (Environment.getNodeEnv() === 'test') {
-      return;
-    }
-    Logger[exception.level](`${this.name}: ${this.message}`);
+    Logger.error(`${this.name}: ${this.message}`, ELogLevel.ERROR);
   }
 }

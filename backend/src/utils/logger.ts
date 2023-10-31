@@ -1,5 +1,5 @@
 /* eslint no-console: [ "off" ] */
-
+import { Environment } from './environment';
 import { isString } from './type-checker';
 
 export const COLOR_PREFIX = {
@@ -49,26 +49,69 @@ export const COLOR_PREFIX = {
   BgWhite: '\x1b[30m\x1b[47m%s\x1b[0m'
 };
 
-export type LogLevel = 'info' | 'success' | 'warn' | 'danger' | 'error';
+export enum ELogLevel {
+  ERROR=0,
+  DEBUG=1,
+  TEST=2,
+  PRODUCTION=3,
+}
+
+function stringify (value: any): string {
+  return isString(value) ? value : JSON.stringify(value);
+}
 
 export class Logger {
-  static info (log: any): void {
-    console.log(COLOR_PREFIX.TextBlue, isString(log) ? log : JSON.stringify(log));
+  public static ENV_LOG_LEVEL: ELogLevel = Environment.getLogLevel();
+
+  static shouldPrint (logLevel?: ELogLevel): boolean {
+    if (!logLevel) {
+      if (this.ENV_LOG_LEVEL === ELogLevel.DEBUG) {
+        return true;
+      }
+
+      return false;
+    }
+
+    return logLevel <= this.ENV_LOG_LEVEL;
   }
 
-  static success (log: any): void {
-    console.log(COLOR_PREFIX.TextGreen, isString(log) ? log : JSON.stringify(log));
+  static info (log: any, logLevel?: ELogLevel): void {
+    if (!this.shouldPrint(logLevel)) {
+      return;
+    }
+
+    console.log(COLOR_PREFIX.TextBlue, stringify(log));
   }
 
-  static warn (log: any): void {
-    console.log(COLOR_PREFIX.TextYellow, isString(log) ? log : JSON.stringify(log));
+  static success (log: any, logLevel?: ELogLevel): void {
+    if (!this.shouldPrint(logLevel)) {
+      return;
+    }
+
+    console.log(COLOR_PREFIX.TextGreen, stringify(log));
   }
 
-  static danger (log: any): void {
-    console.log(COLOR_PREFIX.TextRed, isString(log) ? log : JSON.stringify(log));
+  static warn (log: any, logLevel?: ELogLevel): void {
+    if (!this.shouldPrint(logLevel)) {
+      return;
+    }
+
+    console.log(COLOR_PREFIX.TextYellow, stringify(log));
   }
 
-  static error (log: any): void {
-    console.log(COLOR_PREFIX.TextError, isString(log) ? log : JSON.stringify(log));
+  static danger (log: any, logLevel?: ELogLevel): void {
+    if (!this.shouldPrint(logLevel)) {
+      return;
+    }
+
+    console.log(COLOR_PREFIX.TextRed, stringify(log));
+  }
+
+  static error (log: any, logLevel?: ELogLevel): void {
+    if (!this.shouldPrint(logLevel)) {
+      return;
+    }
+
+    console.log(COLOR_PREFIX.TextError, stringify(log));
   }
 }

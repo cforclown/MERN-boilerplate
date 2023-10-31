@@ -15,12 +15,11 @@ import { Environment } from '../utils';
 function App (): Express {
   const app = express();
   app.use(logger('dev'));
-  // app.use(logger(':remote-addr :method :url :status :response-time ms - :res[content-length]'));
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ limit: '10mb', extended: false }));
   app.use(
     cors({
-      origin: Environment.getClientBaseUrl(),
+      origin: Environment.getAllowedOrigins(),
       credentials: true
     })
   );
@@ -29,11 +28,11 @@ function App (): Express {
   app.use(
     expressSession({
       secret: Environment.getSessionSecret(),
-      resave: Environment.getSessionResave(),
-      saveUninitialized: Environment.getSessionSaveUninitialized(),
+      resave: false,
+      saveUninitialized: false,
       cookie: {
-        secure: Environment.getSessionCookieSecure(),
-        maxAge: Environment.getSessionCookieMaxAge()
+        secure: false,
+        maxAge: 3600
       }
     })
   );

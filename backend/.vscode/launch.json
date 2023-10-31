@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "debug-dev",
+      "name": "Debug dev",
       "type": "pwa-node",
       "request": "launch",
       "console": "integratedTerminal",
@@ -21,7 +21,7 @@
       ]
     },
     {
-      "name": "debug-test",
+      "name": "Debug test",
       "type": "node",
       "request": "launch",
       "runtimeArgs": [
@@ -37,9 +37,9 @@
       "internalConsoleOptions": "neverOpen"
     },
     {
+      "name": "Debug current test file",
       "type": "node",
       "request": "launch",
-      "name": "debug-current-test-file",
       "program": "${workspaceFolder}/node_modules/jest/bin/jest",
       "args": [
         "${fileBasename}",
@@ -52,7 +52,7 @@
       "internalConsoleOptions": "neverOpen"
     },
     {
-      "name": "debug-test-utils",
+      "name": "Debug test utils",
       "type": "node",
       "request": "launch",
       "runtimeArgs": [

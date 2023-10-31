@@ -8,9 +8,9 @@
     "start": "ts-node src/index.ts",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "dev": "set NODE_ENV=development&& ts-node src/index.ts",
+    "dev": "ts-node src/index.ts",
     "build": "tsc",
-    "prod": "set NODE_ENV=production&& ts-node src/index.ts",
+    "prod": "ts-node src/index.ts",
     "lint": "eslint \"src/**/*.{js,ts}\"",
     "lint:check": "npm run lint",
     "lint:format": "npm run lint -- --fix",
@@ -78,7 +78,6 @@
     ]
   },
   "volta": {
-    "node": "18.17.1",
-    "npm": "9.6.7"
+    "node": "20.9.0"
   }
 }

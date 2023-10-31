@@ -1,14 +1,17 @@
 {
   "include": [
     "src",
-    "jest.config.js"
+    "jest.config.js",
+    "src/test",
+    "src/**/*.ts"
   ],
   "exclude": [
     "node_modules",
-    "build"
+    "build",
+    ".vscode"
   ],
   "compilerOptions": {
-    "target": "es2021",
+    "target": "es6",
     "lib": [
       "DOM"
     ],
@@ -17,7 +20,7 @@
       "./node_modules/@types"
     ],
     "module": "commonjs",
-    "moduleResolution": "Node",
+    "moduleResolution": "node",
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "sourceMap": true,

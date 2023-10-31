@@ -1,19 +1,18 @@
 import { Router } from 'express';
 import { SchedulesController } from './schedules.controller';
 import { RequestHandler, validateBody, validateParams } from '../../utils';
-import { ObjectIdSchema } from '../../schemas/common-schema';
+import { pathIdSchema } from '../../schemas/common';
 import { CreateSchedulePayloadSchema, UpdateSchedulePayloadSchema } from './schedules.dto';
-import { ExplorationDto } from '../../utils/exploration/exploration';
 
 export const SCHEDULES_ROUTER_INSTANCE_NAME = 'schedulesRouter';
 export const SCHEDULES_BASE_API_PATH = 'schedules';
 
-export function SchedulesRouter ({ schedulesController }:{ schedulesController:SchedulesController }): Router {
+export function SchedulesRouter (schedulesController: SchedulesController): Router {
   const router = Router();
 
   /**
    * @swagger
-   * /api/v1/schedules/{objectId}:
+   * /api/v1/schedules/{id}:
    *      get:
    *          tags:
    *              - Schedules
@@ -22,11 +21,11 @@ export function SchedulesRouter ({ schedulesController }:{ schedulesController:S
    *              '200':
    *                  description: OK
    *          parameters:
-   *              -   name: objectId
+   *              -   name: id
    *                  in: path
    *                  required: true
    */
-  router.get('/:objectId', validateParams(ObjectIdSchema), RequestHandler(schedulesController.get));
+  router.get('/:id', validateParams(pathIdSchema), RequestHandler(schedulesController.get));
 
   /**
    * @swagger
@@ -40,26 +39,6 @@ export function SchedulesRouter ({ schedulesController }:{ schedulesController:S
    *                  description: OK
    */
   router.get('/', RequestHandler(schedulesController.getAll));
-
-  /**
-   * @swagger
-   * /api/v1/schedules/explore:
-   *      post:
-   *          tags:
-   *              - Schedules
-   *          description: Explore schedules with pagination
-   *          responses:
-   *              '200':
-   *                  description: OK
-   *          requestBody:
-   *              description: "Exploration payload"
-   *              required: true
-   *              content:
-   *                  application/json:
-   *                      schema:
-   *                          $ref: '#/components/schemas/explorationPayload'
-   */
-  router.post('/explore', validateBody(ExplorationDto), RequestHandler(schedulesController.explore));
 
   /**
    * @swagger
@@ -112,11 +91,11 @@ export function SchedulesRouter ({ schedulesController }:{ schedulesController:S
    *              '200':
    *                  description: OK
    *          parameters:
-   *              -   name: objectId
+   *              -   name: id
    *                  in: path
    *                  required: true
    */
-  router.delete('/:objectId', RequestHandler(schedulesController.delete));
+  router.delete('/:id', RequestHandler(schedulesController.delete));
 
   return router;
 }

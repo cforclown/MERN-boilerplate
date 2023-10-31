@@ -1,6 +1,11 @@
 import dotenv from 'dotenv';
+import { ELogLevel } from './logger';
 
 dotenv.config();
+
+export const AppEnvNames = ['dev', 'test', 'staging', 'prod'] as const;
+export type AppEnvs = typeof AppEnvNames[number];
+const isValidAppEnv = (env: string): env is AppEnvs => !!AppEnvNames.find(e => e === env);
 
 export function getEnvOrThrow (environmentVariableName: string): string {
   const value = process.env[environmentVariableName];
@@ -11,36 +16,47 @@ export function getEnvOrThrow (environmentVariableName: string): string {
 }
 
 export const Environment = {
-  getNodeEnv: (): 'development' | 'test' | 'production' => {
-    const value = getEnvOrThrow('NODE_ENV');
-    if (value !== 'development' && value !== 'test' && value !== 'production') {
-      throw new Error('Environment variable NODE_ENV not set!');
+  getNodeEnv: (): AppEnvs => {
+    const value = getEnvOrThrow('APP_ENV');
+    if (!isValidAppEnv(value)) {
+      throw new Error('Environment variable APP_ENV not set or invalid! APP_ENV should be one of => \'dev\' | \'test\' | \'staging\' | \'prod\'');
     }
+
     return value;
   },
+  getAppPort: (): string => getEnvOrThrow('APP_PORT'),
 
   getApiVersion: (): string => getEnvOrThrow('API_VERSION'),
-  getAppPort: (): string => getEnvOrThrow('APP_PORT'),
-  getClientBaseUrl: (): string[] => {
-    const appHost = getEnvOrThrow('CLIENT_BASE_URL');
+  getLogLevel: (): ELogLevel => {
+    const logLevel = process.env.LOG_LEVEL;
+    if (!logLevel) {
+      return ELogLevel.PRODUCTION;
+    }
+
+    switch (logLevel) {
+      case 'debug':
+        return ELogLevel.DEBUG;
+      case 'test':
+        return ELogLevel.TEST;
+      case 'error':
+        return ELogLevel.ERROR;
+      case 'prod':
+        return ELogLevel.PRODUCTION;
+      default:
+        return ELogLevel.PRODUCTION;
+    }
+  },
+
+  getAllowedOrigins: (): string[] => {
+    const appHost = getEnvOrThrow('ALLOWED_ORIGINS');
     return appHost.split(',').filter(h => !!h);
   },
 
-  getDBUri: (): string => `mongodb://${getEnvOrThrow('DB_USERNAME')}:${getEnvOrThrow('DB_PASSWORD')}@${getEnvOrThrow('DB_HOST')}:${getEnvOrThrow('DB_PORT')}`,
-  getDBName: (): string => getEnvOrThrow('DB_NAME'),
-  getDBUsername: (): string => getEnvOrThrow('DB_USERNAME'),
-  getDBPassword: (): string => getEnvOrThrow('DB_PASSWORD'),
+  getDBConnectionStr: (): string => getEnvOrThrow('DB_CONN_STR'),
 
   getSessionSecret: (): string => getEnvOrThrow('SESSION_SECRET'),
-  getSessionResave: (): boolean => getEnvOrThrow('SESSION_RESAVE') === 'true',
-  getSessionSaveUninitialized: (): boolean => getEnvOrThrow('SESSION_SAVE_UNINITIALIZED') === 'true',
-  getSessionCookieSecure: (): boolean => getEnvOrThrow('SESSION_COOKIE_SECURE') === 'true',
-  getSessionCookieMaxAge: (): number => parseInt(getEnvOrThrow('SESSION_COOKIE_MAX_AGE')),
 
   getAccessTokenSecret: (): string => getEnvOrThrow('ACCESS_TOKEN_SECRET'),
-  getRefreshTokenSecret: (): string => getEnvOrThrow('REFRESH_TOKEN_SECRET'),
-  getAccessTokenExpIn: (): number => parseInt(getEnvOrThrow('ACCESS_TOKEN_EXP_IN')),
-  getAccessRefreshTokenExpIn: (): number => parseInt(getEnvOrThrow('ACCESS_TOKEN_EXP_IN')) * 2,
 
   getEncryptionAlgorithm: (): string => getEnvOrThrow('ENCRYPTION_ALGORITHM'),
   getEncryptionKey: (): string => getEnvOrThrow('ENCRYPTION_KEY')
