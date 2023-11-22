@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { Environment } from '../utils';
-import { SchedulesDao, SchedulesSchema } from '../resources';
+import { SchedulesDao, SchedulesSchema } from '../modules';
 
 class Database {
   constructor () {

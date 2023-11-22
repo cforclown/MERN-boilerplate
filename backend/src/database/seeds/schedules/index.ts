@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 import mockData from '../../../../mock-data/mock-data.json';
 import { container, setup } from '../../../di-config';
-import { ICreateSchedulePayload, SchedulesDao } from '../../../resources';
+import { ICreateSchedulePayload, SchedulesDao } from '../../../modules';
 import Database from '../..';
 import { Logger } from '../../../utils';
 

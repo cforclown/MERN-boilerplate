@@ -8,7 +8,7 @@ import {
   SchedulesRouter,
   SchedulesSchema,
   SchedulesService
-} from './resources';
+} from './modules';
 
 export const container = createContainer({
   injectionMode: InjectionMode.CLASSIC

@@ -20,5 +20,5 @@ export default {
       schemas: Schemas
     }
   },
-  apis: ['./src/resources/**/*.ts']
+  apis: ['./src/modules/**/*.ts']
 };

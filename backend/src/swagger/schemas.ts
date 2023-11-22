@@ -1,4 +1,4 @@
-import { SchedulesSwaggerSchemas } from '../resources';
+import { SchedulesSwaggerSchemas } from '../modules';
 import { ExplorationSwaggerSchemas } from '../utils/exploration/exploration';
 
 const schemas = Object.assign(

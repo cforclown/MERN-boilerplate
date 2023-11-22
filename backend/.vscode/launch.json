@@ -68,14 +68,14 @@
       "internalConsoleOptions": "neverOpen"
     },
     {
-      "name": "debug-test-all-resources",
+      "name": "debug-test-all-modules",
       "type": "node",
       "request": "launch",
       "runtimeArgs": [
         "--inspect-brk",
         "${workspaceRoot}/node_modules/jest/bin/jest.js",
         "--runInBand",
-        "--testPathPattern=src/resources",
+        "--testPathPattern=src/modules",
         "--coverage",
         "false",
         "--verbose"
