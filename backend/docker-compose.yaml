@@ -1,7 +1,7 @@
-name: mern-boilerplate
+name: mern-boilerplate-basic-setup
 services:
   mongo:
-    container_name: mern-boilerplate-mongo
+    container_name: mern-boilerplate-basic-setup-mongo
     image: mongo
     restart: always
     ports:
@@ -14,7 +14,7 @@ services:
       MONGO_INITDB_DATABASE: ${DB_NAME}
 
   api:
-    container_name: mern-boilerplate-api
+    container_name: mern-boilerplate-basic-setup-api
     build:
       context: .
       dockerfile: Dockerfile
